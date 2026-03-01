@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+/* Theme tokens */
+:root {
+  --color-primary: theme(colors.blue.600);
+  --color-primary-hover: theme(colors.blue.700);
+}
+
+/* Base */
+body {
+  @apply bg-slate-50 text-slate-900;
+}
+
+/* Components */
+.btn-primary {
+  background-color: var(--color-primary);
+  @apply text-white font-medium py-2 px-4 rounded-lg transition-colors;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
