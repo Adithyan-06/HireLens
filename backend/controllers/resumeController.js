@@ -12,14 +12,14 @@ const extractTextFromPDF = async (buffer) => {
     
     // Create a PDF parser instance with the buffer data
     // Convert buffer to base64 or handle accordingly
-    const base64Data = buffer.toString('base64');
+    const data = new Uint8Array(buffer);
     
     // Create parser with the PDF data
     const parser = new PDFParse({
-      data: base64Data,
+      data: data,
       type: 'buffer'
     });
-
+ 
     // Get text from PDF
     const result = await parser.getText();
     let fullText = result.text;
