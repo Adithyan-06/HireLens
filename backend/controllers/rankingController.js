@@ -13,13 +13,20 @@ export const getGlobalRankings = async (req, res) => {
     console.log('🏆 Fetching global rankings');
     console.log('========================================');
 
-    const { page = 1, limit = 50 } = req.query;
+    const { page = 1, limit = 50, college } = req.query;
     const offset = (page - 1) * limit;
 
-    // Fetch all profiles with only available fields
-    const { data: profiles, error, count } = await supabase
+    // Build query with college filter
+    let query = supabase
       .from('profiles')
-      .select('id, full_name, bio, cgpa, github_username, location, website_url, linkedin_url, resume_url, projects, experience, skills, education, certifications, internships, achievements, created_at, updated_at', { count: 'exact' });
+      .select('id, full_name, bio, cgpa, github_username, location, college, website_url, linkedin_url, resume_url, projects, experience, skills, education, certifications, internships, achievements, created_at, updated_at', { count: 'exact' });
+
+    // Filter by college if provided
+    if (college) {
+      query = query.ilike('college', `%${college}%`);
+    }
+
+    const { data: profiles, error, count } = await query;
 
     if (error) {
       console.error('❌ Error fetching profiles:', error);
@@ -68,7 +75,7 @@ export const getGlobalRankings = async (req, res) => {
         rank: offset + index + 1
       }));
 
-    console.log('✅ Rankings calculated for', rankedProfiles.length, 'profiles');
+    console.log('✅ Rankings calculated for', rankedProfiles.length, 'profiles', college ? `from ${college}` : '');
     console.log('========================================\n');
 
     return res.status(200).json({
@@ -216,6 +223,88 @@ export const searchRankings = async (req, res) => {
     });
   } catch (error) {
     console.error('❌ Error in searchRankings:', error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+// Get rankings by college
+export const getRankingsByCollege = async (req, res) => {
+  try {
+    const { college } = req.params;
+    const { page = 1, limit = 20 } = req.query;
+
+    if (!college) {
+      return res.status(400).json({ error: 'College name is required' });
+    }
+
+    const offset = (page - 1) * limit;
+
+    // Get profiles from specific college
+    const { data: profiles, error, count } = await supabase
+      .from('profiles')
+      .select('*', { count: 'exact' })
+      .ilike('college', `%${college}%`)
+      .order('total_score', { ascending: false })
+      .range(offset, offset + limit - 1);
+
+    if (error) {
+      console.error('❌ Supabase error:', error);
+      return res.status(500).json({ error: 'Failed to fetch college rankings' });
+    }
+
+    const rankings = profiles.map((profile, index) => ({
+      rank: offset + index + 1,
+      user_id: profile.user_id,
+      full_name: profile.full_name || 'Anonymous',
+      college: profile.college,
+      total_score: profile.total_score || 0,
+      skills_count: Array.isArray(profile.skills) ? profile.skills.length : 0,
+      cgpa: profile.cgpa || 0,
+      github_username: profile.github_username,
+      avatar_url: profile.avatar_url,
+      bio: profile.bio
+    }));
+
+    console.log('✅ College rankings fetched:', { college, count });
+
+    res.status(200).json({
+      college,
+      rankings,
+      pagination: {
+        current_page: parseInt(page),
+        total_pages: Math.ceil(count / limit),
+        total_count: count,
+        limit
+      }
+    });
+  } catch (error) {
+    console.error('❌ Error in getRankingsByCollege:', error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+// Get list of all unique colleges
+export const getColleges = async (req, res) => {
+  try {
+    const { data: profiles, error } = await supabase
+      .from('profiles')
+      .select('college')
+      .not('college', 'is', null)
+      .not('college', 'eq', '');
+
+    if (error) {
+      console.error('❌ Supabase error:', error);
+      return res.status(500).json({ error: 'Failed to fetch colleges' });
+    }
+
+    // Remove duplicates and sort
+    const uniqueColleges = [...new Set(profiles.map(p => p.college).filter(Boolean))].sort();
+
+    console.log('✅ Colleges fetched:', uniqueColleges.length);
+
+    res.status(200).json(uniqueColleges);
+  } catch (error) {
+    console.error('❌ Error in getColleges:', error);
     return res.status(500).json({ error: error.message });
   }
 };

@@ -50,8 +50,9 @@ export const saveProfile = async (req, res) => {
     }
 
     const {
-      fullName,
+      full_name,
       location,
+      college,
       bio,
       cgpa,
       github_username,
@@ -68,14 +69,15 @@ export const saveProfile = async (req, res) => {
     } = req.body;
 
     // Validate required fields
-    if (!fullName || !location) {
+    if (!full_name || !location || !college) {
       console.error('❌ Missing required fields');
-      return res.status(400).json({ error: 'Full Name and Location are required' });
+      return res.status(400).json({ error: 'Full Name, Location, and College are required' });
     }
 
     console.log('Profile data received:', {
-      fullName,
+      full_name,
       location,
+      college,
       skills: skills?.length || 0,
       experience: experience?.length || 0,
       education: education?.length || 0
@@ -83,8 +85,9 @@ export const saveProfile = async (req, res) => {
 
     // Prepare profile data matching schema
     const profileData = {
-      full_name: fullName,
+      full_name: full_name,
       location,
+      college,
       bio: bio || null,
       github_username: github_username || null,
       linkedin_url: linkedin_url || null,
@@ -145,6 +148,7 @@ export const deleteProfile = async (req, res) => {
       .update({
         full_name: null,
         location: null,
+        college: null,
         bio: null,
         cgpa: null,
         github_username: null,
@@ -189,7 +193,7 @@ export const getProfileStatus = async (req, res) => {
 
     const { data, error } = await supabase
       .from('profiles')
-      .select('full_name, location, github_username, website_url, linkedin_url, projects, experience, education, skills')
+      .select('full_name, location, college, github_username, website_url, linkedin_url, projects, experience, education, skills')
       .eq('id', req.user.id)
       .single();
 
@@ -208,6 +212,7 @@ export const getProfileStatus = async (req, res) => {
       fieldsCompleted: data ? [
         data.full_name ? 'name' : null,
         data.location ? 'location' : null,
+        data.college ? 'college' : null,
         data.github_username ? 'github' : null,
         data.website_url ? 'website' : null,
         data.linkedin_url ? 'linkedin' : null,

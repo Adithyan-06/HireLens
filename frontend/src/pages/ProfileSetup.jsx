@@ -9,8 +9,9 @@ const ProfileSetup = () => {
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [formData, setFormData] = useState({
-    fullName: '',
+    full_name: '',
     location: '',
+    college: '',
     bio: '',
     cgpa: '',
     github_username: '',
@@ -21,8 +22,9 @@ const ProfileSetup = () => {
 
   const [formState, setFormState] = useState({
     personalInfo: {
-      fullName: '',
+      full_name: '',
       location: '',
+      college: '',
       bio: '',
       githubUrl: '',
       linkedinUrl: '',
@@ -74,8 +76,9 @@ const ProfileSetup = () => {
         setFormState(prev => ({
           ...prev,
           personalInfo: {
-            fullName: profile.full_name || '',
+            full_name: profile.full_name || '',
             location: profile.location || '',
+            college: profile.college || '',
             bio: profile.bio || '',
             githubUrl: profile.github_username || '',
             linkedinUrl: profile.linkedin_url || '',
@@ -94,8 +97,9 @@ const ProfileSetup = () => {
         }));
 
         setFormData({
-          fullName: profile.full_name || '',
+          full_name: profile.full_name || '',
           location: profile.location || '',
+          college: profile.college || '',
           bio: profile.bio || '',
           cgpa: profile.cgpa || '',
           github_username: profile.github_username || '',
@@ -117,7 +121,7 @@ const ProfileSetup = () => {
     }));
 
     // Also update formState for consistency
-    if (name === 'fullName' || name === 'location' || name === 'bio' || 
+    if (name === 'full_name' || name === 'location' || name === 'college' ||  name === 'bio' || 
         name === 'github_username' || name === 'linkedin_url' || name === 'website_url') {
       setFormState(prev => ({
         ...prev,
@@ -126,7 +130,8 @@ const ProfileSetup = () => {
           [name === 'github_username' ? 'githubUrl' : 
            name === 'linkedin_url' ? 'linkedinUrl' : 
            name === 'website_url' ? 'portfolioUrl' :
-           name === 'fullName' ? 'fullName' :
+           name === 'college' ? 'college' : 
+           name === 'full_name' ? 'full_name' :
            name === 'location' ? 'location' :
            name === 'bio' ? 'bio' : name]: value
         }
@@ -175,7 +180,7 @@ const ProfileSetup = () => {
           ...prev,
           personalInfo: {
             ...prev.personalInfo,
-            fullName: parsedData.personalInfo?.fullName || prev.personalInfo.fullName,
+            full_name: parsedData.personalInfo?.full_name || prev.personalInfo.full_name,
             location: parsedData.personalInfo?.location || prev.personalInfo.location,
             email: parsedData.personalInfo?.email || prev.personalInfo.email,
             phone: parsedData.personalInfo?.phone || prev.personalInfo.phone,
@@ -196,7 +201,7 @@ const ProfileSetup = () => {
         // Update formData as well
         setFormData(prev => ({
           ...prev,
-          fullName: parsedData.personalInfo?.fullName || prev.fullName,
+          full_name: parsedData.personalInfo?.full_name || prev.full_name,
           location: parsedData.personalInfo?.location || prev.location,
           github_username: parsedData.personalInfo?.githubUrl || prev.github_username,
           linkedin_url: parsedData.personalInfo?.linkedinUrl || prev.linkedin_url,
@@ -332,8 +337,9 @@ const ProfileSetup = () => {
 
       // Map formState to backend field names
       const profileData = {
-        fullName: formState.personalInfo?.fullName || '',
+        full_name: formState.personalInfo?.full_name || '',
         location: formState.personalInfo?.location || '',
+        college: formState.personalInfo?.college || '',
         bio: formState.personalInfo?.bio || '',
         cgpa: formState.education?.[0]?.cgpa || null,
         github_username: formState.personalInfo?.githubUrl || '',
@@ -388,6 +394,8 @@ const ProfileSetup = () => {
     }
   };
 
+  
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
       <h1 className="text-4xl font-bold text-slate-900 mb-2">Complete Your Profile</h1>
@@ -441,9 +449,9 @@ const ProfileSetup = () => {
         <div className="space-y-4">
           <input
             type="text"
-            name="fullName"
+            name="full_name"
             placeholder="Full Name *"
-            value={formData.fullName}
+            value={formData.full_name}
             onChange={handleInputChange}
             className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500"
           />
@@ -456,7 +464,14 @@ const ProfileSetup = () => {
             onChange={handleInputChange}
             className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500"
           />
-
+            <input
+              type="text"
+              name="college"
+              value={formData.college}
+              onChange={handleInputChange}
+              placeholder="College *"
+              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           <textarea
             name="bio"
             placeholder="Bio (Optional)"
