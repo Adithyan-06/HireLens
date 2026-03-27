@@ -147,7 +147,9 @@ export const uploadResume = async (req, res) => {
     };
 
     try {
-      const prompt = `Analyze this resume and extract the following information in JSON format. Return ONLY the JSON object, no other text:
+      // Added a small instruction to escape quotes just as a fallback safety measure
+      const prompt = `Analyze this resume and extract the following information in JSON format. 
+Make sure to correctly escape all internal double quotes within strings.
 
 {
   "summary": "Brief summary of the candidate (2-3 sentences)",
@@ -187,33 +189,30 @@ export const uploadResume = async (req, res) => {
 Resume Content:
 ${extractedText}`;
 
-      // ✅ Correct pattern for @google/genai SDK
+      // ✅ Correct pattern for @google/genai SDK with JSON Mode enabled
       const response = await genAI.models.generateContent({
-        model: 'gemini-2.5-flash', // Using newer model
+        model: 'gemini-2.5-flash', 
         contents: prompt,
         config: {
           temperature: 0.2,
-          maxOutputTokens: 2048,
+          maxOutputTokens: 8192,
+          responseMimeType: 'application/json' // ✅ Enforces strict JSON output
         }
       });
       
       const responseText = response.text;
       console.log('Raw Gemini response:', responseText);
 
-      // Parse JSON from response with better error handling
-      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        try {
-          const parsed = JSON.parse(jsonMatch[0]);
-          analysisResult = { ...analysisResult, ...parsed };
-          console.log('✅ Resume analyzed successfully');
-          console.log('Analysis result:', analysisResult);
-        } catch (parseError) {
-          console.error('❌ Failed to parse JSON:', parseError);
-        }
-      } else {
-        console.warn('⚠️ Could not extract JSON from Gemini response');
+      // ✅ Parse JSON directly. With responseMimeType set, we don't need regex markdown stripping
+      try {
+        const parsed = JSON.parse(responseText);
+        analysisResult = { ...analysisResult, ...parsed };
+        console.log('✅ Resume analyzed successfully');
+        console.log('Analysis result:', analysisResult);
+      } catch (parseError) {
+        console.error('❌ Failed to parse JSON:', parseError);
       }
+      
     } catch (geminiError) {
       console.error('❌ Gemini analysis error:', geminiError);
       // Don't fail the upload if Gemini fails
