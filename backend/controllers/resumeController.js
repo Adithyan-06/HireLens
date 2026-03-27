@@ -110,28 +110,30 @@ export const uploadResume = async (req, res) => {
     }
 
     // Upload to Supabase Storage
-    const fileName = `${req.user.id}-${Date.now()}.pdf`;
-    const { data: uploadData, error: uploadError } = await supabase
-      .storage
-      .from('resumes')
-      .upload(fileName, file.buffer, {
-        contentType: 'application/pdf',
-        upsert: false
-      });
+    // bro did not implement the bucket in supabase
+    
+    // const fileName = `${req.user.id}-${Date.now()}.pdf`;
+    // const { data: uploadData, error: uploadError } = await supabase
+    //   .storage
+    //   .from('resumes')
+    //   .upload(fileName, file.buffer, {
+    //     contentType: 'application/pdf',
+    //     upsert: false
+    //   });
 
-    if (uploadError) {
-      console.error('❌ Supabase upload error:', uploadError);
-      return res.status(500).json({ error: `Failed to upload resume: ${uploadError.message}` });
-    }
+    // if (uploadError) {
+    //   console.error('❌ Supabase upload error:', uploadError);
+    //   return res.status(500).json({ error: `Failed to upload resume: ${uploadError.message}` });
+    // }
 
-    // Get public URL
-    const { data: publicUrlData } = supabase
-      .storage
-      .from('resumes')
-      .getPublicUrl(fileName);
+    // // Get public URL
+    // const { data: publicUrlData } = supabase
+    //   .storage
+    //   .from('resumes')
+    //   .getPublicUrl(fileName);
 
-    const resumeUrl = publicUrlData.publicUrl;
-    console.log('✅ Resume uploaded to Supabase:', resumeUrl);
+    // const resumeUrl = publicUrlData.publicUrl;
+    // console.log('✅ Resume uploaded to Supabase:', resumeUrl);
 
     // Analyze resume with Gemini using the new SDK pattern
     console.log('🤖 Analyzing resume with Gemini...');
@@ -187,7 +189,7 @@ ${extractedText}`;
 
       // ✅ Correct pattern for @google/genai SDK
       const response = await genAI.models.generateContent({
-        model: 'gemini-2.0-flash-exp', // Using newer model
+        model: 'gemini-2.5-flash', // Using newer model
         contents: prompt,
         config: {
           temperature: 0.2,
@@ -221,7 +223,7 @@ ${extractedText}`;
     const { data: profileData, error: profileError } = await supabase
       .from('profiles')
       .update({
-        resume_url: resumeUrl,
+        resume_url: [],
         experience: analysisResult.experience || [],
         skills: analysisResult.skills || [],
         education: analysisResult.education || [],
@@ -244,7 +246,7 @@ ${extractedText}`;
       success: true,
       message: 'Resume uploaded and analyzed successfully',
       data: {
-        resume_url: resumeUrl,
+        resume_url:[],
         analysis: analysisResult,
         profile: profileData[0]
       }
