@@ -272,7 +272,6 @@ const CampusRankings = () => {
             rankings.map((ranking) => (
               <div
                 key={ranking.id}
-                onClick={() => navigate(`/profile/${ranking.id}`)}
                 className="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-lg transition-all cursor-pointer"
               >
                 <div className="flex items-center justify-between">

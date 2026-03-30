@@ -4,11 +4,11 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { Briefcase, User, LogOut, LayoutDashboard } from 'lucide-react';
 
 const Navbar = () => {
-  const { user, signOut } = useAuth();
+  const { user,logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await signOut();
+    await logout();
     navigate('/');
   };
 

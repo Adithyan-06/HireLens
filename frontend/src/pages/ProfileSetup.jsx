@@ -436,7 +436,7 @@ const ProfileSetup = () => {
         {formState.resumeFile && (
           <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between">
             <span className="text-green-700 font-semibold">
-              ✓ Resume uploaded: {formState.resumeFile.url}
+              ✓ Resume uploaded
             </span>
           </div>
         )}
