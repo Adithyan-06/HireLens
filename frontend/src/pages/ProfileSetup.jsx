@@ -62,7 +62,7 @@ const ProfileSetup = () => {
         return;
       }
 
-      const response = await axios.get('http://localhost:5000/api/profile', {
+      const response = await axios.get('https://hirelens-oowi.onrender.com/api/profile', {
         headers: {
           'Authorization': `Bearer ${authToken}`,
           'Content-Type': 'application/json'
@@ -156,7 +156,7 @@ const ProfileSetup = () => {
       const authToken = localStorage.getItem('authToken');
 
       const response = await axios.post(
-        'http://localhost:5000/api/resume/parse',
+        'https://hirelens-oowi.onrender.com/api/resume/parse',
         formDataUpload,
         {
           headers: {
@@ -360,7 +360,7 @@ const ProfileSetup = () => {
       const authToken = localStorage.getItem('authToken');
 
       const response = await axios.post(
-        'http://localhost:5000/api/profile',
+        'https://hirelens-oowi.onrender.com/api/profile',
         profileData,
         {
           headers: {

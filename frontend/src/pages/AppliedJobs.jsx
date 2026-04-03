@@ -64,7 +64,7 @@ const AppliedJobs = () => {
       }
 
       const response = await axios.get(
-        'http://localhost:5000/api/jobs/applied',
+        'https://hirelens-oowi.onrender.com/api/jobs/applied',
         {
           headers: {
             'Authorization': `Bearer ${authToken}`,
@@ -94,7 +94,7 @@ const AppliedJobs = () => {
       const authToken = localStorage.getItem('authToken');
 
       const response = await axios.patch(
-        `http://localhost:5000/api/jobs/${applicationId}/status`,
+        `https://hirelens-oowi.onrender.com/api/jobs/${applicationId}/status`,
         { 
           applicationId,
           status: newStatus 
@@ -132,7 +132,7 @@ const AppliedJobs = () => {
       const authToken = localStorage.getItem('authToken');
 
       await axios.delete(
-        `http://localhost:5000/api/jobs/${applicationId}`,
+        `https://hirelens-oowi.onrender.com/api/jobs/${applicationId}`,
         {
           headers: {
             'Authorization': `Bearer ${authToken}`

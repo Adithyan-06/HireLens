@@ -9,7 +9,7 @@ const RoadmapModal = ({ skill, onClose, onSave }) => {
   const generateRoadmap = async () => {
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/roadmap', { skill });
+      const response = await axios.post('https://hirelens-oowi.onrender.com/api/roadmap', { skill });
       setRoadmap(response.data.roadmap); // Assuming the API returns a "roadmap" field
     } catch (error) {
       console.error('Error generating roadmap:', error);

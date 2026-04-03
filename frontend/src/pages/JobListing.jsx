@@ -16,7 +16,7 @@ const JobListing = () => {
     try {
       const { title, location } = searchQuery;
       const response = await fetch(
-        `http://localhost:5000/api/jobs/search?search=${title}&location=${location}`
+        `https://hirelens-oowi.onrender.com/api/jobs/search?search=${title}&location=${location}`
       );
       const result = await response.json();
 

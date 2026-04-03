@@ -8,9 +8,7 @@ router.get('/', getJobs);
 router.get('/applied', authMiddleware, getAppliedJobs);
 router.get('/search', searchJobs);
 router.get('/:id', getJobs);
-
 router.post('/apply', authMiddleware, applyJob);
-
 router.patch('/:id/status', authMiddleware, updateApplicationStatus);
 router.delete('/:id', authMiddleware, removeAppliedJob);
 

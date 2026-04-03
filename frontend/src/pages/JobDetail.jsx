@@ -36,7 +36,7 @@ const JobDetail = () => {
       console.log('Fetching job details for ID:', id);
 
       const response = await axios.get(
-        `http://localhost:5000/api/jobs/${id}`,
+        `https://hirelens-oowi.onrender.com/api/jobs/${id}`,
         {
           headers: {
             'Content-Type': 'application/json'
@@ -82,7 +82,7 @@ const JobDetail = () => {
       }
 
       const response = await axios.get(
-        'http://localhost:5000/api/profile',
+        'https://hirelens-oowi.onrender.com/api/profile',
         {
           headers: {
             'Authorization': `Bearer ${authToken}`,
@@ -128,7 +128,7 @@ const JobDetail = () => {
 
       // Save to applied_jobs table
       const response = await axios.post(
-        'http://localhost:5000/api/jobs/apply',
+        'https://hirelens-oowi.onrender.com/api/jobs/apply',
         {
           jobId: id,
           jobTitle: job.title,
@@ -195,7 +195,7 @@ const JobDetail = () => {
 
       // Create roadmap by calling backend API
       const response = await axios.post(
-        'http://localhost:5000/api/roadmap/generate',
+        'https://hirelens-oowi.onrender.com/api/roadmap/generate',
         {
           skills: job.skills,
           jobTitle: job.title,

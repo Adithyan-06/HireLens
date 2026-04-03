@@ -32,7 +32,7 @@ const CampusRankings = () => {
   // Fetch colleges list
   const fetchColleges = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/rankings/colleges');
+      const response = await axios.get('https://hirelens-oowi.onrender.com/api/rankings/colleges');
       setColleges(response.data);
     } catch (error) {
       console.error('Error fetching colleges:', error);
@@ -43,7 +43,7 @@ const CampusRankings = () => {
   const fetchRankings = async (collegeFilter = null) => {
     setLoading(true);
     try {
-      let url = `http://localhost:5000/api/rankings/global`;
+      let url = `https://hirelens-oowi.onrender.com/api/rankings/global`;
       
       const params = {
         page: page,
@@ -73,7 +73,7 @@ const CampusRankings = () => {
       if (!authToken || !user?.id) return;
 
       const response = await axios.get(
-        `http://localhost:5000/api/rankings/user/${user.id}`,
+        `https://hirelens-oowi.onrender.com/api/rankings/user/${user.id}`,
         {
           headers: {
             'Authorization': `Bearer ${authToken}`

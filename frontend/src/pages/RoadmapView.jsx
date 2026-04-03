@@ -46,7 +46,7 @@ const RoadmapView = () => {
       console.log('Fetching roadmaps...');
 
       const response = await axios.get(
-        'http://localhost:5000/api/roadmap',
+        'https://hirelens-oowi.onrender.com/api/roadmap',
         {
           headers: {
             'Authorization': `Bearer ${authToken}`,
@@ -100,7 +100,7 @@ const RoadmapView = () => {
 
       // Update roadmap with new progress and metadata
       const response = await axios.patch(
-        `http://localhost:5000/api/roadmap/${activeRoadmap.id}`,
+        `https://hirelens-oowi.onrender.com/api/roadmap/${activeRoadmap.id}`,
         {
           progress_percentage: newProgress,
           status: newProgress === 100 ? 'Completed' : 'In Progress',
@@ -151,7 +151,7 @@ const RoadmapView = () => {
       const authToken = localStorage.getItem('authToken');
 
       await axios.delete(
-        `http://localhost:5000/api/roadmap/${roadmapId}`,
+        `https://hirelens-oowi.onrender.com/api/roadmap/${roadmapId}`,
         {
           headers: {
             'Authorization': `Bearer ${authToken}`
